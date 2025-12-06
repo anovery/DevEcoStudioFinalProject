@@ -34,7 +34,7 @@ export default struct Home {
           .fontSize('26fp')
 
         Button('问诊记录')
-          .width('50%')
+          .width('40%')
           .height('100vp')
           .fontSize('16fp')
           .backgroundColor('#007DFF')
