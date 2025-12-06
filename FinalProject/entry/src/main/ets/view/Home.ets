@@ -1,4 +1,6 @@
 //首页组件
+import ItemData from '../viewmodel/ItemData';
+import MainViewModel from '../viewmodel/MainViewModel';
 
 @Component
 export default struct Home {
@@ -24,55 +26,55 @@ export default struct Home {
   build() {
     NavDestination(){
       Column() {
+        //标题部分
         Text('首页')
+          .height('60vp')
           .width('100%')
-          .margin({
-            top: '48vp',
-            bottom: '12vp'
-          })
-          .fontWeight(700)
-          .fontSize('26fp')
+          .fontWeight(200)//字体粗细
+          .fontSize('20fp')//字体大小
+          .backgroundColor('#f217ddae')
+          .fontColor('#FFFFFF')
+          .textAlign(TextAlign.Center)
 
-        Button('问诊记录')
-          .width('30%')
-          .height('100vp')
-          .fontSize('16fp')
-          .backgroundColor('#007DFF')
-          .onClick(() => {
-            this.Consultation(true);
-          })
+        //轮播图
+        Swiper() {
+          ForEach(MainViewModel.getSwiperImages(), (img: Resource) => {
+            Image(img)
+              .width('100%')
+          }, (img: Resource) => JSON.stringify(img.id))
+        }.autoPlay(true)
+        .indicator(
+          Indicator.dot()
+            .selectedColor(Color.Green)
+        )
 
+        //导航宫格
+        Grid(){
+          ForEach(MainViewModel.getFirstGridData(),(item:ItemData,index:number)=>{
+            GridItem(){
+              Column(){
+                Image(item.img)
+                  .width('40vp')
+                  .height('40vp')
+                Text(item.title)
+                  .fontSize('12fp')
+                  .margin({top:'4vp'})
+              }
+              .onClick(()=>{
+                if(index==0) this.Consultation(true);
+                else if(index==1) this.ServiceOrders(true);
+                else if(index==2) this.ServiceProcurement(true);
+                else if(index==3) this.Admission(true);
+              })
+            }
+          },(item:ItemData)=>JSON.stringify(item))
+        }
 
-        Button('服务订单')
-          .width('50%')
-          .height('100vp')
-          .fontSize('16fp')
-          .backgroundColor('#007DFF')
-          .onClick(() => {
-            this.ServiceOrders(true);
-          })
-
-        Button('服务采购')
-          .width('50%')
-          .height('100vp')
-          .fontSize('16fp')
-          .backgroundColor('#007DFF')
-          .onClick(() => {
-            this.ServiceProcurement(true);
-          })
-        Button('入住申请')
-          .width('50%')
-          .height('100vp')
-          .fontSize('16fp')
-          .backgroundColor('#007DFF')
-          .onClick(() => {
-            this.Admission(true);
-          })
       }
       .width('100%')
       .height('100%')
-      .backgroundColor('#F1F3F5')
-    }
+      .backgroundColor('#ffffffff')
+    }.width('100%')
 
   }
 }

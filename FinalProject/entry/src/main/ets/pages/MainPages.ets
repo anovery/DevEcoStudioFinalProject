@@ -52,9 +52,10 @@ export struct MainPages {
         }) {
           TabContent() {
             Home()
-          }.padding({ left: '12vp', right: '12vp' })
+          }
           .backgroundColor('#F1F3F5')
           .tabBar(this.TabBuilder('首页', 0, $r('sys.symbol.house_fill')))
+          .width('100%')
 
           TabContent() {
             Health()
@@ -94,7 +95,8 @@ export struct MainPages {
       .backgroundColor('#F1F3F5')
     }
     .height('100%')
+    .width('100%')
     .hideTitleBar(true)
-    .backgroundColor('#F1F3F5')
+    .backgroundColor('#f217ddae')//整个页面最底部的颜色包括手机显示电量的地方
   }
 }
