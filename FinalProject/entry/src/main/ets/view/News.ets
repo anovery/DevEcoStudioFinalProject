@@ -10,7 +10,7 @@ export default struct News {
         .width('100%')
         .fontWeight(220)//字体粗细
         .fontSize('20fp')//字体大小
-        .backgroundColor('#d821deb4')
+        .backgroundColor('#0021deb4')
         .fontColor('#FFFFFF')
         .textAlign(TextAlign.Center)
     }

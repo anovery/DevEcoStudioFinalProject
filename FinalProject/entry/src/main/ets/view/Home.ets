@@ -151,7 +151,7 @@ export default struct Home {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor('#d821deb4')
+      .backgroundColor('#0021deb4')
     }.width('100%')
 
   }
