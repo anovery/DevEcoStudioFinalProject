@@ -1,63 +1,9 @@
 //健康宣教组件
-
-import { HealthCard, type HealthData } from './HealthCard'
+import { healthDataList, heartRateData, type HealthData } from '../viewmodel/HealthNumData';
+import { HealthCard} from './HealthCard'
 
 @Component
 export default struct Health {
-  @State heartRateData: HealthData = {
-    icon: $r('sys.symbol.heart_fill'),
-    label: '心率',
-    value: '72',
-    unit: 'bpm',
-    type: 'line',
-    history: [88,63,93,78]
-  };
-
-  @State healthDataList: HealthData[] = [
-    {
-      icon: $r('sys.symbol.leaf_fill'),
-      label: '血氧饱和度',
-      value: '98',
-      unit: '%',
-      type: 'bar',
-      history: [96, 97, 91, 94, 97]
-    },
-    {
-      icon: $r('sys.symbol.thermometer_fill'),
-      label: '体温',
-      value: '36.5',
-      unit: '°C',
-    },
-    {
-      icon: $r('sys.symbol.drop_fill'),
-      label: '血压',
-      value: '120/80',
-      unit: 'mmHg',
-    },
-    {
-      icon: $r('sys.symbol.checkmark_circle_fill'),
-      label: '血糖',
-      value: '5.2',
-      unit: 'mmol/L',
-      history: [5.0, 5.1, 5.2, 5.3, 5.2]
-    },
-    {
-      icon: $r('sys.symbol.clock_fill'),
-      label: '睡眠',
-      value: '7.5',
-      sleepData:[{value:2.5, name:'深度'},{value:5, name:'浅度'}],
-      unit: '小时',
-      type: 'pie',
-    },
-    {
-      icon: $r('sys.symbol.moon_fill'),
-      label: '压力',
-      value: '32',
-      unit: '%',
-      type: 'bar',
-      history: [30, 32, 28, 25, 32]
-    }
-  ];
 
   private __hrTimer: number = 0;
 
@@ -76,12 +22,12 @@ export default struct Health {
         // 健康卡片网格
         Grid() {
           GridItem() {
-            HealthCard({ data: this.heartRateData })
+            HealthCard({ data: heartRateData })
           }
           .columnStart(0)
           .columnEnd(1)
 
-          ForEach(this.healthDataList, (item: HealthData) => {
+          ForEach(healthDataList, (item: HealthData) => {
             GridItem() {
               HealthCard({ data: item })
             }

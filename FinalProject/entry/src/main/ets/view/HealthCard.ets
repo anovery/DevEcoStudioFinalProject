@@ -1,20 +1,6 @@
 //健康信息卡片组件
 import { McLineChart, McBarChart,  McPieChart,Options } from '@mcui/mccharts';
-
-export interface SleepItem {
-  value: number;   // 数值，例如 2.5 小时
-  name: string;    // 名称，例如 "深度睡眠"
-}
-
-export interface HealthData {
-  icon: Resource; // 图标
-  label: string; // 标签（如：心率、血氧等）
-  value: string; // 数值
-  unit: string; // 单位
-  type?: 'line' | 'bar' | 'pie' | 'simple'; //可选：图表类型
-  history?: number[]; // 可选：历史数据（用于图表）
-  sleepData?: SleepItem[]; // 可选：睡眠数据;
-}
+import {type HealthData } from '../viewmodel/HealthNumData';
 
 @Component
 export struct HealthCard {
