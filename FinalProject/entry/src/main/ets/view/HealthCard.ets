@@ -1,13 +1,19 @@
 //健康信息卡片组件
-import { McLineChart, McBarChart, Options } from '@mcui/mccharts';
+import { McLineChart, McBarChart,  McPieChart,Options } from '@mcui/mccharts';
+
+export interface SleepItem {
+  value: number;   // 数值，例如 2.5 小时
+  name: string;    // 名称，例如 "深度睡眠"
+}
 
 export interface HealthData {
   icon: Resource; // 图标
   label: string; // 标签（如：心率、血氧等）
   value: string; // 数值
   unit: string; // 单位
-  type?: 'line' | 'bar' | 'gauge' | 'simple'; // 卡片类型（默认简单卡片）
+  type?: 'line' | 'bar' | 'pie' | 'simple'; //可选：图表类型
   history?: number[]; // 可选：历史数据（用于图表）
+  sleepData?: SleepItem[]; // 可选：睡眠数据;
 }
 
 @Component
@@ -125,7 +131,7 @@ export struct HealthCard {
         data: this.data.history?.slice(-4) || [],
         barStyle:{
           width: 5,
-          color: '#3DC875',
+          color: this.data.label === '压力' ? '#5FECCA' : '#3DC875',
         },
       }],
       dataZoom:{
@@ -137,7 +143,31 @@ export struct HealthCard {
     });
   }
 
-  // 绘制折线图（用于心率等）
+// 获取饼图配置
+  private getPieChartOptions(): Options {
+    return new Options({
+      series: [{
+        radius: ['80%', '50%'], // 饼图外半径、内半径
+        center: ['50%', '50%'], // 饼图中心位置
+        data: this.data.sleepData,
+      }],
+      title: {
+        show: false,
+      },
+      legend: {
+        show: false,
+      },
+      grid:{
+        left:5,
+        right:5,
+        top:5,
+        bottom:5,
+      },
+      color:['#1BC0F2','#5BD793']
+    });
+  }
+
+  // 绘制折线图
   @Builder lineChart() {
     if (this.data.history && this.data.history.length > 1) {
       McLineChart({
@@ -148,7 +178,7 @@ export struct HealthCard {
     }
   }
 
-  // 绘制柱状图（用于血氧等数据）
+  // 绘制柱状图
   @Builder barChart() {
     if (this.data.history && this.data.history.length > 0) {
       McBarChart({
@@ -159,23 +189,15 @@ export struct HealthCard {
     }
   }
 
-  // 绘制仪表盘（用于血压等范围数据）
-  @Builder gaugeChart() {
-    Row() {
-      Column() {
-        Circle()
-          .width('40vp')
-          .height('40vp')
-          .fill('#f0f0f0')
-          .stroke('#ffffff')
-          .strokeWidth(3)
-      }
+  // 绘制饼图
+  @Builder pieChart() {
+    if (this.data.sleepData && this.data.sleepData.length > 0) {
+      McPieChart({
+        options: this.getPieChartOptions()
+      })
       .width('90%')
-      .justifyContent(FlexAlign.Center)
+      .height('100vp')
     }
-    .width('100%')
-    .height('100vp')
-    .justifyContent(FlexAlign.Center)
   }
 
   build() {
@@ -211,10 +233,24 @@ export struct HealthCard {
           this.lineChart();
         } else if (this.data.type === 'bar') {
           this.barChart();
-        } else if (this.data.type === 'gauge') {
-          this.gaugeChart();
+        } else if (this.data.type === 'pie') {
+          this.pieChart();
         } else {
-          Blank().width('100%').height('100vp')
+            if (this.data.label === '体温') {
+              Image($r('app.media.temp_icon'))
+                .width('100vp')
+                .height('100vp')
+            } else if (this.data.label === '血糖') {
+              Image($r('app.media.sugar_icon'))
+                .width('100vp')
+                .height('100vp')
+            } else if (this.data.label === '血压') {
+              Image($r('app.media.pressure_icon'))
+                .width('100vp')
+                .height('100vp')
+            } else {
+              Blank().width('100%').height('100vp')
+            }
         }
       }
       .width('100%')
@@ -222,7 +258,7 @@ export struct HealthCard {
     .width('100%')
     .shadow({
       radius: 4,
-      color: '#0000000f',
+      color: '#000000bc',
       offsetX: 0,
       offsetY: 2
     })

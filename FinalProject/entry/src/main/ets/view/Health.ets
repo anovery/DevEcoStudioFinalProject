@@ -45,7 +45,9 @@ export default struct Health {
       icon: $r('sys.symbol.clock_fill'),
       label: '睡眠',
       value: '7.5',
+      sleepData:[{value:2.5, name:'深度'},{value:5, name:'浅度'}],
       unit: '小时',
+      type: 'pie',
     },
     {
       icon: $r('sys.symbol.moon_fill'),
@@ -69,7 +71,7 @@ export default struct Health {
             bottom: '24vp'
           })
           .fontWeight(700)
-          .fontSize('26fp')
+          .fontSize('30fp')
 
         // 健康卡片网格
         Grid() {
@@ -103,6 +105,6 @@ export default struct Health {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F1F3F5')
+    .backgroundColor('##F1F0F0')
   }
 }
