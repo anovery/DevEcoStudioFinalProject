@@ -86,7 +86,7 @@ export struct MainPages {
         .height('100%')
         .barHeight('68vp')
         .barMode(BarMode.Fixed)
-        .onChange((index: number) => {
+        .onChange((index: number) => { 
           this.currentIndex = index;
         })
       }
