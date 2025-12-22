@@ -60,7 +60,7 @@ export struct MainPages {
 
           TabContent() {
             Health()
-          }.padding({ left: '12vp', right: '12vp' })
+          }
           .backgroundColor('#F1F3F5')
           .tabBar(this.TabBuilder('健康', 1, $r('sys.symbol.waveform_path_ecg_heart_fill')))
 
@@ -86,7 +86,7 @@ export struct MainPages {
         .height('100%')
         .barHeight('68vp')
         .barMode(BarMode.Fixed)
-        .onChange((index: number) => {
+        .onChange((index: number) => { 
           this.currentIndex = index;
         })
       }
