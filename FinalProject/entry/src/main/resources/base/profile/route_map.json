@@ -57,6 +57,30 @@
       }
     },
     {
+      "name": "ServiceDetail",
+      "pageSourceFile": "src/main/ets/pages/ServiceDetail.ets",
+      "buildFunction": "ServiceDetailBuilder",
+      "data": {
+        "description": "this is ServiceDetail"
+      }
+    },
+    {
+      "name": "AppointmentForm",
+      "pageSourceFile": "src/main/ets/pages/AppointmentForm.ets",
+      "buildFunction": "AppointmentFormBuilder",
+      "data": {
+        "description": "this is AppointmentForm"
+      }
+    },
+    {
+      "name": "AdmissionForm",
+      "pageSourceFile": "src/main/ets/pages/AdmissionForm.ets",
+      "buildFunction": "AdmissionFormBuilder",
+      "data": {
+        "description": "this is AdmissionForm"
+      }
+    },
+    {
       "name": "AddUser",
       "pageSourceFile": "src/main/ets/pages/AddUser.ets",
       "buildFunction": "AddUserBuilder",
