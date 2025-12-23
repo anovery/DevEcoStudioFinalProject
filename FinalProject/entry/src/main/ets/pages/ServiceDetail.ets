@@ -1,5 +1,5 @@
 // 服务详情页面
-import { ServiceItemType, ServiceItemList } from '../viewmodel/ServiceProcurementData';
+import { ServiceItemType, ServiceItemList, FeeItem as SimpleFeeItem } from '../viewmodel/ServiceProcurementData';
 
 // ServiceDetail()的入口函数
 @Builder
@@ -41,6 +41,7 @@ struct ServiceDetail {
         this.serviceItem.serviceDetails = foundItem.serviceDetails;
         this.serviceItem.serviceAppointmentNotice = foundItem.serviceAppointmentNotice;
         this.serviceItem.serviceFeeNotice = foundItem.serviceFeeNotice;
+        this.serviceItem.feeBreakdown = foundItem.feeBreakdown;
       }
     }
   }
@@ -54,6 +55,27 @@ struct ServiceDetail {
   build() {
     NavDestination() {
       Column() {
+        // 标题栏
+        Row() {
+          Image($r('app.media.ic_back'))
+            .width('24vp')
+            .height('24vp')
+            .margin({ left: '16vp' })
+            .onClick(() => {
+              this.pathStack.pop();
+            })
+          Text('服务详情')
+            .fontSize('18fp')
+            .fontColor(Color.White)
+            .fontWeight(FontWeight.Medium)
+            .layoutWeight(1)
+            .textAlign(TextAlign.Center)
+          Blank().width('40vp')
+        }
+        .width('100%')
+        .height('50vp')
+        .backgroundColor('#00CEB8')
+
         // 滚动容器
         Scroll() {
           Column() {
@@ -161,56 +183,70 @@ struct ServiceDetail {
                 .color('#E5E5E5')
                 .margin({ top: '16vp', bottom: '16vp' })
 
-              // 费用标题
-              Text('费用')
-                .fontSize('18fp')
-                .fontWeight(600)
-                .fontColor('#333333')
-                .width('100%')
-
-              // 费用明细
+              // 费用区域容器
               Column() {
-                // 服务费
+                // 费用标题栏
                 Row() {
-                  Text('服务费')
-                    .fontSize('15fp')
-                    .fontColor('#666666')
-                    .layoutWeight(1)
-                  Row() {
-                    Text('¥')
-                      .fontSize('14fp')
-                      .fontColor('#FF6B6B')
-                      .fontWeight(600)
-                    Text(this.serviceItem.servicePrice.toString())
-                      .fontSize('20fp')
-                      .fontColor('#FF6B6B')
-                      .fontWeight(700)
-                    Text(`/${this.serviceItem.serviceUnit}`)
-                      .fontSize('14fp')
-                      .fontColor('#999999')
-                      .margin({ left: '2vp' })
-                  }
+                  Divider()
+                    .vertical(true)
+                    .strokeWidth(3)
+                    .height('16vp')
+                    .color('#00CEB8')
+                    .margin({ right: '8vp' })
+                  Text('费用')
+                    .fontSize('14fp')
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#333333')
                 }
                 .width('100%')
-                .margin({ top: '8vp' })
+                .margin({ bottom: '12vp' })
 
-                // 其他费用说明（根据需要可以添加更多明细项）
+                // 费用明细内容
+                if (this.serviceItem.feeBreakdown && this.serviceItem.feeBreakdown.length > 0) {
+                  ForEach(this.serviceItem.feeBreakdown, (item: SimpleFeeItem) => {
+                    Row() {
+                      Text(item.name)
+                        .fontSize('14fp')
+                        .fontColor('#999999')
+                      Text(' ------------------------------------ ')
+                        .fontSize('12fp')
+                        .fontColor('#E8E8E8')
+                        .layoutWeight(1)
+                        .maxLines(1)
+                        .textOverflow({ overflow: TextOverflow.Clip })
+                      Text(`¥ ${item.price}`)
+                        .fontSize('14fp')
+                        .fontColor('#333333')
+                    }
+                    .width('100%')
+                    .margin({ bottom: '8vp' })
+                  })
+                }
+
+                // 总金额
                 Row() {
-                  Text('其他费用')
-                    .fontSize('15fp')
-                    .fontColor('#666666')
-                    .layoutWeight(1)
-                  Text('详见费用须知')
+                  Text('总金额')
                     .fontSize('14fp')
-                    .fontColor('#999999')
+                    .fontColor('#333333')
+                  Blank()
+                  Text(`¥${this.serviceItem.servicePrice}`)
+                    .fontSize('18fp')
+                    .fontColor('#FF6B00')
+                    .fontWeight(FontWeight.Bold)
                 }
                 .width('100%')
                 .margin({ top: '8vp' })
               }
               .width('100%')
+              .padding('16vp')
+              .backgroundColor(Color.White)
+              .borderRadius('8vp')
+              .border({ width: 1, color: '#E8E8E8', radius: '8vp' })
+              .margin({ top: '12vp' })
             }
             .padding('16vp')
             .width('100%')
+            // .backgroundColor('#FFFFFF') // Removed duplicated background color if needed, or keep it. Using the one from line 215 originally.
             .backgroundColor('#FFFFFF')
           }
         }
@@ -224,7 +260,7 @@ struct ServiceDetail {
             .height('48vp')
             .fontSize('18fp')
             .fontWeight(600)
-            .backgroundColor('#13C2C2')
+            .backgroundColor('#00CEB8')
             .borderRadius('24vp')
             .onClick(() => {
               this.handleAppointment();
@@ -239,7 +275,6 @@ struct ServiceDetail {
       .height('100%')
       .backgroundColor('#F1F3F5')
     }
-    .hideTitleBar(false)
-    .title('服务详情')
+    .hideTitleBar(true)
   }
 }

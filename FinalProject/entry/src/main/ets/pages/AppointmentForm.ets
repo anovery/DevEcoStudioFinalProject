@@ -1,7 +1,8 @@
 // 预约信息填写页面
-import { ServiceItemType, AppointmentFormType, ServiceItemList } from '../viewmodel/ServiceProcurementData';
+import { ServiceItemType, AppointmentFormType, ServiceItemList, ServiceOrder } from '../viewmodel/ServiceProcurementData';
 import ServiceItemCard from '../view/ServiceItemCard';
 import { PatientInfo, getPatientList } from '../viewmodel/PatientData';
+import { CaregiverInfo, getCaregiverList } from '../viewmodel/CaregiverData';
 import promptAction from '@ohos.promptAction';
 
 // Select组件选项类型
@@ -25,13 +26,8 @@ struct AppointmentForm {
   @State patientList: PatientInfo[] = [];
 
 
-  // 模拟的看护名称列表
-  @State caregiverList: string[] = [
-    '基础护理',
-    '专业护理',
-    '康复训练',
-    '生活照料'
-  ];
+  // 看护人员列表
+  @State caregiverList: CaregiverInfo[] = [];
 
   // 模拟的预约时间列表
   @State timeSlotList: string[] = [
@@ -44,6 +40,8 @@ struct AppointmentForm {
   aboutToAppear(): void {
     // 获取康养用户列表
     this.patientList = getPatientList();
+    // 获取看护人员列表
+    this.caregiverList = getCaregiverList();
 
     // 从导航参数中获取服务ID
     const param: Object | undefined = this.pathStack.getParamByName('AppointmentForm');
@@ -94,8 +92,8 @@ struct AppointmentForm {
         promptAction.showToast({ message: '请选择康养用户' });
         return;
       }
-      if (!this.formData.caregiverName) {
-        promptAction.showToast({ message: '请选择看护名称' });
+      if (!this.formData.caregiverId) {
+        promptAction.showToast({ message: '请选择看护人员' });
         return;
       }
       if (!this.formData.appointmentTime) {
@@ -119,6 +117,24 @@ struct AppointmentForm {
         return;
       }
 
+      // 创建订单对象
+      const selectedCaregiver = this.caregiverList.find(c => c.id === this.formData.caregiverId);
+      const newOrder: ServiceOrder = {
+        id: Date.now(),
+        serviceType: this.serviceItem.serviceType,
+        carePersonName: this.formData.patientName,
+        serviceNumber: `kh_${Date.now()}`,
+        caregiverId: this.formData.caregiverId,
+        caregiverName: selectedCaregiver?.name,
+        appointmentTime: this.formData.appointmentTime,
+        servicePrice: this.serviceItem.servicePrice,
+        status: '待服务'
+      };
+
+      // 保存到AppStorage
+      const currentList: ServiceOrder[] = AppStorage.get<ServiceOrder[]>('serviceOrderList') || [];
+      AppStorage.setOrCreate('serviceOrderList', [newOrder, ...currentList]);
+
       // 提交成功提示
       promptAction.showToast({ message: '预约成功！' });
 
@@ -135,6 +151,27 @@ struct AppointmentForm {
   build() {
     NavDestination() {
       Column() {
+        // 标题栏
+        Row() {
+         Image($r('app.media.ic_back'))
+           .width('24vp')
+           .height('24vp')
+           .margin({ left: '16vp' })
+           .onClick(() => {
+             this.pathStack.pop();
+           })
+         Text('预约信息填写')
+           .fontSize('18fp')
+           .fontColor(Color.White)
+           .fontWeight(FontWeight.Medium)
+           .layoutWeight(1)
+           .textAlign(TextAlign.Center)
+         Blank().width('40vp')
+        }
+        .width('100%')
+        .height('50vp')
+        .backgroundColor('#00CEB8')
+
         // 滚动容器
         Scroll() {
           Column() {
@@ -166,21 +203,28 @@ struct AppointmentForm {
               .width('100%')
               .margin({ bottom: '16vp' })
 
-              // 看护名称选择
+              // 看护人员选择
               Column() {
-                Text('看护名称')
+                Text('看护人员')
                   .fontSize('15fp')
                   .fontColor('#333333')
                   .width('100%')
                   .margin({ bottom: '8vp' })
 
-                Select(this.caregiverList.map((c: string): SelectOption => ({ value: c })))
+                Select(this.caregiverList.map((c: CaregiverInfo): SelectOption => ({ 
+                  value: `${c.name} - ${c.title}` 
+                })))
                   .selected(-1)
-                  .value(this.formData.caregiverName || '请选择看护名称')
+                  .value(this.formData.caregiverId ? 
+                    (() => {
+                      const caregiver = this.caregiverList.find(c => c.id === this.formData.caregiverId);
+                      return caregiver ? `${caregiver.name} - ${caregiver.title}` : '请选择看护人员';
+                    })() : 
+                    '请选择看护人员')
                   .font({ size: '16fp' })
                   .optionFont({ size: '16fp' })
                   .onSelect((index: number) => {
-                    this.formData.caregiverName = this.caregiverList[index];
+                    this.formData.caregiverId = this.caregiverList[index].id;
                   })
                   .width('100%')
               }
@@ -300,7 +344,7 @@ struct AppointmentForm {
             .height('48vp')
             .fontSize('18fp')
             .fontWeight(600)
-            .backgroundColor('#13C2C2')
+            .backgroundColor('#00CEB8')
             .borderRadius('24vp')
             .onClick(() => {
               this.handleSubmit();
@@ -315,7 +359,6 @@ struct AppointmentForm {
       .height('100%')
       .backgroundColor('#F1F3F5')
     }
-    .hideTitleBar(false)
-    .title('预约信息填写')
+    .hideTitleBar(true)
   }
 }

@@ -139,6 +139,27 @@ struct AdmissionForm {
   build() {
     NavDestination() {
       Column() {
+        // 标题栏
+        Row() {
+          Image($r('app.media.ic_back'))
+            .width('24vp')
+            .height('24vp')
+            .margin({ left: '16vp' })
+            .onClick(() => {
+              this.pathStack.pop();
+            })
+          Text('入住申请填写')
+            .fontSize('18fp')
+            .fontColor(Color.White)
+            .fontWeight(FontWeight.Medium)
+            .layoutWeight(1)
+            .textAlign(TextAlign.Center)
+          Blank().width('40vp')
+        }
+        .width('100%')
+        .height('50vp')
+        .backgroundColor('#00CEB8')
+
         // 滚动容器
         Scroll() {
           Column() {
@@ -268,7 +289,7 @@ struct AdmissionForm {
             .height('48vp')
             .fontSize('18fp')
             .fontWeight(600)
-            .backgroundColor('#13C2C2')
+            .backgroundColor('#00CEB8')
             .borderRadius('24vp')
             .onClick(() => {
               this.handleSubmit();
@@ -283,7 +304,6 @@ struct AdmissionForm {
       .height('100%')
       .backgroundColor('#F1F3F5')
     }
-    .hideTitleBar(false)
-    .title('入住申请填写')
+    .hideTitleBar(true)
   }
 }

@@ -21,13 +21,26 @@ struct ServiceProcurement {
   build() {
     NavDestination() {
       Column() {
-        // 页面标题
-        Text('服务采购')
-          .width('100%')
-          .padding({ left: '16vp', top: '16vp', bottom: '12vp' })
-          .fontWeight(700)
-          .fontSize('24fp')
-          .fontColor('#333333')
+        // 标题栏
+        Row() {
+          Image($r('app.media.ic_back'))
+            .width('24vp')
+            .height('24vp')
+            .margin({ left: '16vp' })
+            .onClick(() => {
+              this.pathStack.pop();
+            })
+          Text('服务采购')
+            .fontSize('18fp')
+            .fontColor(Color.White)
+            .fontWeight(FontWeight.Medium)
+            .layoutWeight(1)
+            .textAlign(TextAlign.Center)
+          Blank().width('40vp')
+        }
+        .width('100%')
+        .height('50vp')
+        .backgroundColor('#00CEB8')
 
         // 服务项目列表
         ServiceItemListView({
@@ -40,6 +53,6 @@ struct ServiceProcurement {
       .height('100%')
       .backgroundColor('#F1F3F5')
     }
-    .hideTitleBar(false) //如果为true就没有返回的箭头
+    .hideTitleBar(true) //如果为true就没有返回的箭头
   }
 }

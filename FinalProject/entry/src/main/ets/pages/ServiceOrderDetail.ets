@@ -1,4 +1,5 @@
 //服务订单详情页面
+import { getCaregiverById, CaregiverInfo } from '../viewmodel/CaregiverData';
 
 // 费用信息接口
 interface FeeInfo {
@@ -8,13 +9,7 @@ interface FeeInfo {
   totalAmount: number;      // 总金额
 }
 
-// 看护信息接口
-interface CaregiverInfo {
-  name: string;
-  phone: string;
-  organization: string;
-  roomNumber: string;
-}
+
 
 // 评估问题接口
 interface AssessmentQuestion {
@@ -47,13 +42,8 @@ struct ServiceOrderDetail {
     totalAmount: 36
   };
 
-  // 看护信息
-  @State caregiverInfo: CaregiverInfo = {
-    name: '王国栋',
-    phone: '13620240001',
-    organization: '中山大学展示中心',
-    roomNumber: '25'
-  };
+  // 看护信息(从订单数据中获取)
+  @State caregiverInfo: CaregiverInfo | undefined = undefined;
 
   // 康复评估数据
   @State assessmentQuestions: AssessmentQuestion[] = [
@@ -68,6 +58,13 @@ struct ServiceOrderDetail {
     { question: '9. 体育锻炼情况?', answer: '无' },
     { question: '10. 康复情况评估', answer: '' }
   ];
+
+  aboutToAppear(): void {
+    // 根据订单中的caregiverId加载看护人员信息
+    if (this.orderData.caregiverId) {
+      this.caregiverInfo = getCaregiverById(this.orderData.caregiverId as string);
+    }
+  }
 
   // 获取状态颜色
   getStatusColor(status: string): string {
@@ -316,17 +313,17 @@ struct ServiceOrderDetail {
   @Builder
   CaregiverInfoView() {
     Column() {
-      Text(this.caregiverInfo.name)
+      Text(this.caregiverInfo?.name || '未分配')
         .fontSize('16fp')
         .fontWeight(FontWeight.Bold)
         .fontColor('#333333')
         .width('100%')
         .margin({ bottom: '16vp' })
 
-      this.InfoRow('服务名称', this.orderData.serviceType as string)
-      this.InfoRow('看护电话', this.caregiverInfo.phone)
-      this.InfoRow('机构名称', this.caregiverInfo.organization)
-      this.InfoRow('房间号码', this.caregiverInfo.roomNumber)
+      this.InfoRow('职称', this.caregiverInfo?.title || '-')
+      this.InfoRow('联系电话', this.caregiverInfo?.phone || '-')
+      this.InfoRow('所属机构', this.caregiverInfo?.organization || '-')
+      this.InfoRow('专业领域', this.caregiverInfo?.specialties.join('、') || '-')
     }
     .width('100%')
     .padding('16vp')

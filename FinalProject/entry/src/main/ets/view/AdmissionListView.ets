@@ -5,26 +5,11 @@ import AdmissionItemCard from './AdmissionItemCard';
 @Component
 export default struct AdmissionListView {
   @StorageLink('admissionList') admissionList: AdmissionItemType[] = AdmissionItemList;
-  onApplyClick?: () => void;
+  onApplyClick?: () => void;  // 保留以保持接口兼容
   onItemClick?: (item: AdmissionItemType) => void;
 
   build() {
     Column() {
-      // 申请入住按钮
-      Button('申请入住')
-        .width('100%')
-        .height('48vp')
-        .fontSize('16fp')
-        .fontWeight(600)
-        .backgroundColor('#13C2C2')
-        .borderRadius('24vp')
-        .margin({ bottom: '16vp' })
-        .onClick(() => {
-          if (this.onApplyClick) {
-            this.onApplyClick();
-          }
-        })
-
       // 入住申请列表
       if (this.admissionList.length > 0) {
         List({ space: 12 }) {
@@ -39,6 +24,7 @@ export default struct AdmissionListView {
         }
         .width('100%')
         .layoutWeight(1)
+        .padding({ left: '12vp', right: '12vp', top: '12vp' })
       } else {
         // 空状态提示
         Column() {
@@ -53,7 +39,6 @@ export default struct AdmissionListView {
       }
     }
     .width('100%')
-    .height('100%')
-    .padding('12vp')
+    .layoutWeight(1)
   }
 }

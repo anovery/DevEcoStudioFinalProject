@@ -1,16 +1,8 @@
 //服务订单列表页面
 
 //服务订单数据接口
-interface ServiceOrder {
-  id: number;
-  serviceType: string;       // 服务类型（检查）
-  carePersonName: string;    // 被看护人
-  serviceNumber: string;     // 服务单号
-  nursingName: string;       // 看护名称
-  appointmentTime: string;   // 预约时间
-  servicePrice: number;      // 服务价格
-  status: string;            // '待服务', '待评价', '已完成'
-}
+import { ServiceOrder } from '../viewmodel/ServiceProcurementData';
+import { getCaregiverById } from '../viewmodel/CaregiverData';
 
 //ServiceOrders()的入口函数
 @Builder
@@ -23,38 +15,27 @@ struct ServiceOrders {
   pathStack: NavPathStack = AppStorage.get("pathStack") as NavPathStack;
 
   // 模拟服务订单数据
-  @State serviceOrders: ServiceOrder[] = [
-    {
-      id: 1,
-      serviceType: '检查',
-      carePersonName: '王国栋',
-      serviceNumber: 'kh_1710237333469',
-      nursingName: '王国栋',
-      appointmentTime: '2024-09-12 - 11:00-12:00',
-      servicePrice: 10,
-      status: '已支付'
-    },
-    {
-      id: 2,
-      serviceType: '检查',
-      carePersonName: '赵智晟',
-      serviceNumber: 'kh_1710237333469',
-      nursingName: '王国栋',
-      appointmentTime: '2024-09-12 - 11:00-12:00',
-      servicePrice: 10,
-      status: '待服务'
-    },
-    {
-      id: 3,
-      serviceType: '检查',
-      carePersonName: '赵智晟',
-      serviceNumber: 'kh_1709027125728',
-      nursingName: '陈婷',
-      appointmentTime: '2024-02-28 - 17:44',
-      servicePrice: 30,
-      status: '待服务'
+  // 模拟服务订单数据
+  @StorageLink('serviceOrderList') serviceOrders: ServiceOrder[] = [];
+
+  aboutToAppear() {
+    // 只在列表为空时显示演示数据
+    if (this.serviceOrders.length === 0) {
+      this.serviceOrders = [
+        {
+          id: 1,
+          serviceType: '检查',
+          carePersonName: '王国栋',
+          serviceNumber: 'kh_1710237333469',
+          caregiverId: 'cg_001',
+          caregiverName: '李静',
+          appointmentTime: '2024-09-12 - 11:00-12:00',
+          servicePrice: 36,
+          status: '已支付'
+        }
+      ];
     }
-  ];
+  }
 
   // 跳转到服务订单详情页
   navigateToDetail(order: ServiceOrder): void {
@@ -115,13 +96,13 @@ struct ServiceOrders {
       .width('100%')
       .margin({ bottom: '8vp' })
 
-      // 看护名称
+      // 看护人员
       Row() {
-        Text('看护名称')
+        Text('看护人员')
           .fontSize('14fp')
           .fontColor('#999999')
         Blank()
-        Text(order.nursingName)
+        Text(order.caregiverName || '-')
           .fontSize('14fp')
           .fontColor('#333333')
       }
