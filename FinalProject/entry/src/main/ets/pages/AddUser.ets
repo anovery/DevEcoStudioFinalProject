@@ -29,9 +29,7 @@ export default struct AddUser {
     if (this.submitting) return;
     const validationMsg = validateForm(this.formData);
     if (validationMsg) {
-      // 资源化映射
       this.errorMsg = $r('app.string.' + validationMsg);
-      Prompt.showToast({ message: String(this.errorMsg) });
       return;
     }
     this.submitting = true;

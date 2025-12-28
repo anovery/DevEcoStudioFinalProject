@@ -11,7 +11,6 @@ export function ForgetPasswordBuilder() {
   ForgetPassword()
 }
 
-@Entry
 @Component
 export default struct ForgetPassword {
   pathStack: NavPathStack = AppStorage.get("pathStack") as NavPathStack;
@@ -42,11 +41,11 @@ export default struct ForgetPassword {
     const updated = updatePasswordByPhone(this.form.phone.trim(), this.form.password.trim());
     if (updated) {
       setCurrentUser(updated);
-      Prompt.showToast({ message: String($r('app.string.password_reset_success')) });
+      Prompt.showToast({ message: '密码已重置，请用新密码登录'});
       // 返回到应用入口（登录页作为入口时用 clear 更稳妥）
       this.pathStack.clear();
     } else {
-      this.errorMsg = $r('app.string.phone_not_found');
+      this.errorMsg = '未找到该手机号对应的账号';
     }
   }
 

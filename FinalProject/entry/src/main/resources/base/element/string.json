@@ -357,14 +357,6 @@
       "value": "请再次确认密码"
     },
     {
-      "name": "password_reset_success",
-      "value": "密码已重置，请用新密码登录"
-    },
-    {
-      "name": "phone_not_found",
-      "value": "未找到该手机号对应的账号"
-    },
-    {
       "name": "login_subtitle",
       "value": "互联网机构 家属端"
     },
@@ -451,10 +443,6 @@
     {
       "name": "tab_my",
       "value": "我的"
-    },
-    {
-      "name": "register_success",
-      "value": "注册成功，请使用账号或手机号登录"
     },
     {
       "name": "register",

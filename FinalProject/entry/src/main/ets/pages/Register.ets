@@ -43,7 +43,7 @@ struct Register {
     const user: AuthUser = { account: this.form.account.trim(), phone: this.form.phone.trim(), password: this.form.password.trim() };
     upsertUser(user);
     setCurrentUser(user);
-    Prompt.showToast({ message: String($r('app.string.register_success')) });
+    Prompt.showToast({ message: '注册成功，请使用账号或手机号登录' });
     this.pathStack.clear();
   }
 
