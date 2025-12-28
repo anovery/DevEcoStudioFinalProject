@@ -98,7 +98,7 @@ export function getLineChartOptions(data: HealthData, part: string = "heartRate"
       data: data.history || [],
       smooth: true,
       lineStyle:{
-        color:$r('app.color.red')
+        color:'#ff0000'
       },
       areaStyle:{
         show: true,
