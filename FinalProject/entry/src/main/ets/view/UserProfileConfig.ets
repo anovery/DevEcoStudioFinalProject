@@ -1,5 +1,6 @@
 // User Profile constants and initial data
 import { UserInfo, UserDataSource } from './UserModel';
+import { Prompt } from '@kit.ArkUI';
 
 export const MAX_OFFSET_Y = 60;
 export const REFRESH_TIME = 1500;
@@ -29,8 +30,8 @@ export const ALL_MOCK_DATA: UserInfo[] = [
   {
     name: '刘菲',
     gender: '女性',
-    relation: '未成年子女',
-    birthday: '1990-05-10',
+    relation: '子女',
+    birthday: '2000-05-10',
     idCard: '42103988475898892',
     address: '湖北武汉洪山区光谷天地',
     job: '设计师'
@@ -47,13 +48,12 @@ export function addNewUserToList(
 ): void {
   const existIds = dataSource.getAll().map((user: UserInfo) => user.idCard);
   if (existIds.includes(newUser.idCard)) {
-    console.log(`用户${newUser.name}已存在，身份证号：${newUser.idCard}`);
+    Prompt.showToast({ message: `用户已存在，身份证号：${newUser.idCard}` });
     return;
   }
 
   if (dataSource.totalCount() >= TOTAL_MAX_DATA) {
     setIsEnd(true);
-    console.log('已达到最大用户数（10条），无法添加新用户');
     return;
   }
 

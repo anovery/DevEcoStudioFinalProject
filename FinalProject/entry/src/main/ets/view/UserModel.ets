@@ -63,13 +63,6 @@ export class UserDataSource implements IDataSource {
     this.listener?.onDataAdd(startIndex);
   }
 
-  // 插入单个用户
-  insertUser(user: UserInfo): void {
-    const startIndex = this.data.length;
-    this.data.push(this.ensureUid(this.cloneUser(user)));
-    this.listener?.onDataAdd(startIndex);
-  }
-
   // 实现 IDataSource 接口方法
   totalCount(): number {
     return this.data.length;

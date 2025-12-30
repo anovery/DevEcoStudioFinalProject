@@ -4,6 +4,7 @@ import { TextInputField, RelationSelectField, GenderField } from './AddUserFormF
 import { DatePickerModal } from './AddUserDatePickerModal';
 import { relationOptions, formatDateFromDate, parseDate, validateForm, withBirthday } from './AddUserLogic';
 import CommonConstants from '../common/CommonContants'
+import { addNewUserToList, TOTAL_MAX_DATA } from '../view/UserProfileConfig';
 
 @Builder
 export function AddUserBuilder() {
@@ -34,17 +35,24 @@ export default struct AddUser {
     }
     this.submitting = true;
 
-    const ds = AppStorage.get('userDataSource') as UserDataSource | undefined;
+    const ds = AppStorage.get<UserDataSource>('userDataSource');
     // 若未能获取数据源，提示并返回
-    if (!ds || typeof ds.insertUser !== 'function') {
-      Prompt.showToast({ message: '数据源未就绪，请返回重试' });
-      this.submitting = false;
-      return;
-    }
+    //if (!ds || typeof ds.insertUser !== 'function') {
+    if (!ds) {
+        Prompt.showToast({ message: '数据源未就绪，请返回重试' });
+        this.submitting = false;
+        return;
+      }
+    //}
 
     const newUser = this.formData as UserInfo;
-    ds.insertUser(newUser);
-    Prompt.showToast({ message: '添加成功' });
+    addNewUserToList(newUser, ds, (isEnd) => {
+      if (isEnd) {
+        Prompt.showToast({ message: '已达到最大用户数（10条），无法添加' });
+      } else {
+        Prompt.showToast({ message: '添加成功' });
+      }
+    });
     this.submitting = false;
     this.pathStack.pop();
   }

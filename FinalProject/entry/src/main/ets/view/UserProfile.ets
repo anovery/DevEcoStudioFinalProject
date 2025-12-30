@@ -1,5 +1,5 @@
 import { UserInfo, UserDataSource } from './UserModel';
-import { MAX_OFFSET_Y, REFRESH_TIME, NORMAL_FONT_SIZE, TOTAL_MAX_DATA, INIT_USER_DATA, addNewUserToList } from './UserProfileConfig';
+import { MAX_OFFSET_Y, REFRESH_TIME, NORMAL_FONT_SIZE, INIT_USER_DATA, /*addNewUserToList*/ } from './UserProfileConfig';
 import { RefreshComponent, UserList } from './UserProfileBuilders';
 import CommonConstants from '../common/CommonContants'
 
@@ -7,7 +7,7 @@ import CommonConstants from '../common/CommonContants'
 export default struct UserProfile {
   pathStack: NavPathStack = AppStorage.get("pathStack") as NavPathStack;
   // 数据源
-  private dataSource: UserDataSource = AppStorage.get<UserDataSource>('userDataSource') || new UserDataSource(INIT_USER_DATA);
+  private dataSource = AppStorage.get<UserDataSource>('userDataSource')!;
   @State refreshStatus: boolean = false;
   @State refreshText: string = '下拉刷新';
   @State currentOffsetY: number = 0;
@@ -134,13 +134,6 @@ export default struct UserProfile {
       ]
     })
 
-  }
-
-  // 将添加的新用户同步到列表
-  private addNewUserToList(newUser: UserInfo): void {
-    addNewUserToList(newUser, this.dataSource, (flag: boolean) => {
-      this.isEnd = flag;
-    });
   }
 
   // 下拉刷新触摸事件处理

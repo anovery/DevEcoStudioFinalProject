@@ -42,11 +42,11 @@ struct Login {
       const captchaErr = checkPhoneCaptcha(this.form.code, this.captchaState);
       if (captchaErr) { this.errorMsg = captchaErr; return; }
       const found = findByPhone(this.form.phone.trim());
-      if (found) {
-        setCurrentUser(found);
-      } else {
-        setCurrentUser({ account: '', phone: this.form.phone.trim(), password: '' });
+      if (!found) {
+        this.errorMsg = '手机号不存在';
+        return;
       }
+      setCurrentUser(found);
     }
     this.pathStack.pushPathByName('MainPages', this.pathStack);
   }

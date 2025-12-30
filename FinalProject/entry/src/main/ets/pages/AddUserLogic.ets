@@ -49,7 +49,7 @@ export function validateForm(formData: Partial<UserInfo>): string {
     return 'form_incomplete';
   }
   const id = formData.idCard!.trim();
-  const idReg = /^(\d{15}|\d{17}[\dXx])$/;
+  const idReg = /^(\d{15}|\d{17})$/;
   if (!idReg.test(id)) {
     return 'idcard_invalid';
   }
